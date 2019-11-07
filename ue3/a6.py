@@ -22,20 +22,30 @@ print(cnt_all_characters)
 
 # c)
 print('\n######## c) ########')
-cnt_by_character = text.flatMap(lambda line: [(character, 1) for character in line]).reduceByKey(lambda x, y: x+y)
+cnt_by_character = (
+        text.flatMap(lambda line: [(character, 1) for character in line])
+        .reduceByKey(lambda x, y: x+y)
+        )
+
 print('\nZeichenhäufigkeit im Text:')
 print(cnt_by_character.sortByKey().collect())
 
 
 # d)
 print('\n######## d) ########')
-def filter_words(line):
-    filtered = ''
-    for word in line.split(' '):
-       filtered.join(c for c in word if c.isalnum())
-    #''.join(c for c in word if c is c.isalnum() for word in line.split(' '))
-    return filtered
+words_with_special_chars = text.flatMap(lambda line: line.split(' '))
+words = (
+    words_with_special_chars
+    .map(lambda word: ''.join(c for c in word if c.isalnum()))
+    .filter(lambda word: word)
+    )
 
-word_count = text.filter(lambda line: filter_words(line)).flatMap(lambda line: [(word, 1) for word in line.split(' ')]).reduceByKey(lambda x, y: x+y)
+word_count = (
+    words.map(lambda word: word.lower())
+    .map(lambda word: (word, 1))
+    .reduceByKey(lambda x, y: x+y)
+    .sortBy(lambda word: word[1], False)
+    )
+
 print('\nWorthäufigkeit im Text:')
-print(word_count.sortBy(lambda word: word[1], False).collect())
+print(word_count.collect())
