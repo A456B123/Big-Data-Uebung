@@ -6,7 +6,7 @@ Created on Wed Nov  6 12:42:14 2019
 @author: ubuntubig
 """
 import string
-print('---------------AUFGABE 5---------------')
+print('---------------AUFGABE 6---------------')
 
 # a)
 print('\n######## a) ########')
