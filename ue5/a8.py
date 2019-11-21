@@ -86,26 +86,85 @@ def all_prcp(station):
 
 # g)
 print('\n######## g) ########')
-def all_prcp(station):
-    prcp = spark.sql('SELECT d.year, d.value \
+def tmax_avg(station):
+    tmax = spark.sql('SELECT DAYOFYEAR(d.date) AS day, \
+              AVG(d.value/10) AS avg_tmax, \
+              AVG(AVG(d.value/10)) OVER (ORDER BY DAYOFYEAR(d.date) \
+              ROWS 20 PRECEDING) AS avg_tmax_past\
               FROM ghcnddata d JOIN ghcndstations s \
               ON d.stationid = s.stationid \
-              WHERE d.element = "PRCP" AND s.stationname like "{}%" \
-              GROUP BY d.year, d.value'.format(station))
+              WHERE d.element = "TMAX" AND s.stationname like "{}%" \
+              GROUP BY DAYOFYEAR(d.date) \
+              ORDER BY day'.format(station))
 
-    prcp = prcp.collect()
-    plt.bar([row[0] for row in prcp], [row[1] for row in prcp])
-    plt.title('PRCP über alle Jahre in {}'.format(station))
-    plt.xlabel('Jahr')
-    plt.ylabel('Niederschlag')
+    tmax = tmax.collect()
+
+    xv = [row[0] for row in tmax]
+    fig, ax = plt.subplots()
+    ax.plot(xv, [row[1] for row in tmax], label='TMAX avg alle')
+    ax.plot(xv, [row[2] for row in tmax], label='TMAX avg Fenster')
+    ax.legend(loc='lower center')
+    plt.title('TMAX über alle Jahre in {}'.format(station))
+    plt.xlabel('Tag')
+    plt.ylabel('TMAX')
     plt.show()
+
 
 # h)
 print('\n######## h) ########')
+def tmax_avg_mod(station):
+    tmax = spark.sql('SELECT YEAR(d.date) AS year, \
+              AVG(d.value/10) AS avg_tmax, \
+              AVG(AVG(d.value/10)) OVER (ORDER BY YEAR(d.date) \
+              ROWS 19 PRECEDING) AS avg_tmax_past\
+              FROM ghcnddata d JOIN ghcndstations s \
+              ON d.stationid = s.stationid \
+              WHERE d.element = "TMAX" AND s.stationname like "{}%" \
+              GROUP BY YEAR(d.date) \
+              ORDER BY year'.format(station))
+
+    tmax = tmax.collect()
+
+    xv = [row[0] for row in tmax]
+    fig, ax = plt.subplots()
+    ax.plot(xv, [row[1] for row in tmax], label='TMAX avg alle')
+    ax.plot(xv, [row[2] for row in tmax], label='TMAX avg Fenster')
+    ax.legend(loc='lower center')
+    plt.title('TMAX über alle Jahre in {}'.format(station))
+    plt.xlabel('Tag')
+    plt.ylabel('TMAX')
+    plt.show()
+
 
 # i)
 print('\n######## i) ########')
+def tmax_tmin(station, year):
+    res = spark.sql('SELECT s.stationname, d.year, d.tmax, d.tmin\
+                FROM (SELECT tmax.stationid, tmax.year, tmax.value as tmax, tmin.value as tmin \
+                FROM ((SELECT stationid, year, avg(value/10) AS value \
+                FROM ghcnddata WHERE element = "TMAX" \
+                GROUP BY stationid, year) AS tmax \
+                JOIN (SELECT stationid, year, avg(value/10) AS value \
+                FROM ghcnddata WHERE element = "TMIN" \
+                GROUP BY stationid, year) as tmin \
+                ON tmax.stationid = tmin.stationid \
+                AND tmax.year = tmin.year)) as d \
+                JOIN ghcndstations s \
+                ON d.stationid = s.stationid \
+                ORDER BY s.stationname, d.year').show(truncate=False)
 
 # j)
 print('\n######## j) ########')
+def correlation_tmax_tmin(station):
+    correl = spark.sql('SELECT YEAR(tmax.date) AS year, tmax.stationid, \
+                   CORR(tmax.value, tmin.value) AS correlation \
+                   FROM (SELECT date, stationid, value/10 AS value \
+                   FROM ghcnddata WHERE element = "TMAX") AS tmax \
+                   JOIN (SELECT date, stationid, value/10 AS value \
+                   FROM ghcnddata WHERE element = "TMIN") AS tmin \
+                   ON DAYOFYEAR(tmax.date) = DAYOFYEAR(tmin.date) \
+                   AND tmax.stationid = tmin.stationid \
+                   GROUP BY year, tmax.stationid \
+                   ORDER BY year, tmax.stationid')
+
 
