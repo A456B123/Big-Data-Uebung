@@ -19,13 +19,16 @@ print('\n######## b) ########')
 def list_stations_by_country():
     spark.sql('SELECT c.countrycode, c.countryname \
               FROM ghcndstations s JOIN ghcndcountries c \
-              ON s.countrycode = c.countrycode GROUP BY c.countrycode').show(truncate=False)
+              ON s.countrycode = c.countrycode \
+              GROUP BY c.countrycode').show(truncate=False)
 
 
 # c)
 print('\n######## c) ########')
 def list_stations_in_germany():
-    spark.sql('SELECT * FROM ghcndstations WHERE countrycode="GM" ORDER BY stationname ASC').show(truncate=False)
+    spark.sql('SELECT * FROM ghcndstations \
+              WHERE countrycode="GM" \
+              ORDER BY stationname ASC').show(truncate=False)
 
 
 # d)
@@ -34,7 +37,9 @@ def plot_temperature(year, station):
     df = spark.sql('SELECT d.value/10\
               FROM ghcnddata d JOIN ghcndstations s \
               ON d.stationid = s.stationid \
-              WHERE d.element = "TMAX" AND d.year = {} AND s.stationname like "{}%"'.format(year, station))
+              WHERE d.element = "TMAX" \
+              AND d.year = {} \
+              AND s.stationname like "{}%"'.format(year, station))
 
     xv = [x for x in range(1,len(df.collect())+1)]
     plt.plot(xv, df.collect())
@@ -50,12 +55,16 @@ def plot_temperature_min_max(year, station):
     df_max = spark.sql('SELECT d.value/10 \
               FROM ghcnddata d JOIN ghcndstations s \
               ON d.stationid = s.stationid \
-              WHERE d.element = "TMAX" AND d.year = {} AND s.stationname like "{}%"'.format(year, station))
+              WHERE d.element = "TMAX" \
+              AND d.year = {} \
+              AND s.stationname like "{}%"'.format(year, station))
 
     df_min = spark.sql('SELECT d.value/10 \
               FROM ghcnddata d JOIN ghcndstations s \
               ON d.stationid = s.stationid \
-              WHERE d.element = "TMIN" AND d.year = {} AND s.stationname like "{}%"'.format(year, station))
+              WHERE d.element = "TMIN" \
+              AND d.year = {} \
+              AND s.stationname like "{}%"'.format(year, station))
 
     xv = [x for x in range(1,len(df_max.collect())+1)]
     fig, ax = plt.subplots()
@@ -70,11 +79,11 @@ def plot_temperature_min_max(year, station):
 # f)
 print('\n######## f) ########')
 def all_prcp(station):
-    prcp = spark.sql('SELECT d.year, d.value \
+    prcp = spark.sql('SELECT d.year, SUM(d.value/10) \
               FROM ghcnddata d JOIN ghcndstations s \
               ON d.stationid = s.stationid \
               WHERE d.element = "PRCP" AND s.stationname like "{}%" \
-              GROUP BY d.year, d.value'.format(station))
+              GROUP BY d.year'.format(station))
 
     prcp = prcp.collect()
     plt.bar([row[0] for row in prcp], [row[1] for row in prcp])
@@ -119,7 +128,8 @@ def tmax_avg_mod(station):
               ROWS 19 PRECEDING) AS avg_tmax_past\
               FROM ghcnddata d JOIN ghcndstations s \
               ON d.stationid = s.stationid \
-              WHERE d.element = "TMAX" AND s.stationname like "{}%" \
+              WHERE d.element = "TMAX" \
+              AND s.stationname like "{}%" \
               GROUP BY YEAR(d.date) \
               ORDER BY year'.format(station))
 
@@ -156,15 +166,29 @@ def tmax_tmin(station, year):
 # j)
 print('\n######## j) ########')
 def correlation_tmax_tmin(station):
-    correl = spark.sql('SELECT YEAR(tmax.date) AS year, tmax.stationid, \
-                   CORR(tmax.value, tmin.value) AS correlation \
-                   FROM (SELECT date, stationid, value/10 AS value \
-                   FROM ghcnddata WHERE element = "TMAX") AS tmax \
-                   JOIN (SELECT date, stationid, value/10 AS value \
-                   FROM ghcnddata WHERE element = "TMIN") AS tmin \
-                   ON DAYOFYEAR(tmax.date) = DAYOFYEAR(tmin.date) \
-                   AND tmax.stationid = tmin.stationid \
-                   GROUP BY year, tmax.stationid \
-                   ORDER BY year, tmax.stationid')
+    correl = spark.sql('SELECT s.stationname, d.year, d.correlation \
+                       FROM ( \
+                             SELECT tmax.year AS year, tmax.stationid, \
+                                 CORR(tmax.value, tmin.value) AS correlation\
+                             FROM ( \
+                                   (SELECT year, date, stationid, value/10 AS value \
+                                    FROM ghcnddata WHERE element = "TMAX") AS tmax \
+                                    JOIN ( \
+                                          SELECT year, date, stationid, value/10 AS value \
+                                          FROM ghcnddata WHERE element = "TMIN") AS tmin \
+                                          ON DAYOFYEAR(tmax.date) = DAYOFYEAR(tmin.date) \
+                                          AND tmax.stationid = tmin.stationid \
+                                  ) \
+                            GROUP BY tmax.year, tmax.stationid) as d \
+                            JOIN ghcndstations s \
+                            ON d.stationid = s.stationid \
+                        WHERE s.stationname like "{}%" \
+                        ORDER BY d.year, s.stationname'.format(station))
 
+    correl = correl.collect()
+    plt.bar([row[1] for row in correl], [row[2] for row in correl])
+    plt.title('Korrelation TMIN und TMAX pro Jahr in {}'.format(station))
+    plt.xlabel('Jahr')
+    plt.ylabel('Korrelation')
+    plt.show()
 
