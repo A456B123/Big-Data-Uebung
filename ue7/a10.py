@@ -40,7 +40,7 @@ print('\n######## c) ########')
 def frosttage(spark):
 #    frosttage = spark.sql('SELECT solo.stationid, p.jahr, p.frosttage \
 #                          FROM cdcproducts solo \
-#                          LEFT JOIN \
+#                          LEFT OUTER JOIN \
 #                            (SELECT stationid, YEAR(mess_datum) AS jahr, COUNT(stationid) AS frosttage \
 #                            FROM ( \
 #        	                  SELECT stationid, mess_datum, MAX(TT_TU) AS temp_max \
@@ -64,9 +64,9 @@ def frosttage(spark):
     tempMaxTBL.createOrReplaceTempView("maxtempstation")
 
     frostStations = spark.sql("SELECT stationid, year(mess_datum) as jahr, \
-               CASE WHEN MIN(maxtemp) > 0 \
+               CASE WHEN MIN(maxtemp) >= 0 \
                THEN 0 \
-               ELSE COUNT(CASE WHEN maxtemp <= 0 THEN 1 END) \
+               ELSE COUNT(CASE WHEN maxtemp < 0 THEN 1 END) \
                END as frosttage \
                FROM maxtempstation\
               GROUP BY stationid, year(mess_datum) \
@@ -101,15 +101,17 @@ def plot_corr(spark):
                        FROM cdcstations s \
                        INNER JOIN froststationen f \
                        ON s.stationid = f.stationid \
-                       GROUP BY f.jahr')
+                       GROUP BY f.jahr \
+                       ORDER BY f.jahr')
 
     # easier with pandas dataframe!
     pd_corr = dfCorr.toPandas()
     pd_corr = pd_corr.dropna()
-    plt.bar(pd_corr.jahr, pd_corr.correlation, linewidth = 1, alpha = 0.5)
-    plt.xlabel('Jahre')
-    plt.ylabel('Korrelation')
-    plt.title('Korrelation zwischen Stationshöhe und Frosttagen')
-    plt.show()
+    pd_corr.plot.bar(x='jahr', y='correlation', rot=0)
+#    plt.bar(pd_corr.jahr, pd_corr.correlation)
+#    plt.xlabel('Jahre')
+#    plt.ylabel('Korrelation')
+#    plt.title('Korrelation zwischen Stationshöhe und Frosttagen')
+#    plt.show()
 
 
