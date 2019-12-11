@@ -29,7 +29,7 @@ def import_cdc_stations(spark):
     stationLines = sc.textFile('file:///home/ubuntubig/cdc/txt/TU_Stundenwerte_Beschreibung_Stationen_ohne_Kopf.txt')
     stationSplitLines = stationLines.map(
         lambda l:
-        (l[0:5],
+        (l[0:5].strip().lstrip('0'),
          convert_to_date(l[6:14]),
          convert_to_date(l[15:23]),
          int(l[24:38].strip()),

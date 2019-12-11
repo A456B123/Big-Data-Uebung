@@ -9,7 +9,7 @@ Created on Mon Dec  2 16:48:10 2019
 import matplotlib.pyplot as plt
 
 print('---------------AUFGABE 10---------------')
-s
+
 # a)
 print('\n######## a) ########')
 def station_scatter(spark):
