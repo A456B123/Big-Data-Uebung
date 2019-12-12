@@ -13,15 +13,18 @@ def readStockFromParquet(spark, sc):
     Read all data from the parquet files into Dataframes
     and create temp views
     """
-    dfStocks = spark.read.parquet("stocks.parquet")
-    dfStocks.createOrReplaceTempView("stocks")
+    dfStocks = spark.read.parquet('stocks.parquet')
+    dfStocks.createOrReplaceTempView('stocks')
     dfStocks.cache()
 
-    dfPortfolio = spark.read.parquet("portfolio.parquet")
-    dfPortfolio.createOrReplaceTempView("portfolio")
+    dfPortfolio = spark.read.parquet('portfolio.parquet')
+    dfPortfolio.createOrReplaceTempView('portfolio')
     dfPortfolio.cache()
 
     return dfStocks, dfPortfolio
+
+readStockFromParquet(spark, sc)
+
 
 # a)
 print('\n######## a) ########')
@@ -30,6 +33,8 @@ def symbol_notation(spark):
                               FROM stocks \
                               GROUP BY symbol')
     oldest_latest.show()
+
+symbol_notation(spark)
 
 
 # b)
@@ -40,6 +45,8 @@ def min_max_avg_close(spark):
                                   WHERE YEAR(dt) = 2009 \
                                   GROUP BY symbol')
     min_max_avg_close.show()
+
+min_max_avg_close(spark)
 
 
 # c)
@@ -56,6 +63,8 @@ def num_stock_diff(spark):
                      GROUP BY symbol')
     stmt.show()
 
+num_stock_diff(spark)
+
 
 # d)
 print('\n######## d) ########')
@@ -65,28 +74,32 @@ def symbols_no_portfolio(spark):
                                      ON s.symbol = p.symbol')
     symbols_no_portfolio.show()
 
+symbols_no_portfolio(spark)
+
 
 # e)
 print('\n######## e) ########')
 def portfolio_value_2010(spark):
     last_day_2010 = spark.sql('SELECT symbol, MAX(dt) as last_day \
-                              FROM stocks \
-                              WHERE YEAR(dt) = 2010 \
-                              GROUP BY symbol')
+                               FROM stocks \
+                               WHERE YEAR(dt) = 2010 \
+                               GROUP BY symbol')
     last_day_2010.createOrReplaceTempView('lastDay2010Symbol')
     last_day_2010.cache()
 
-    stmt = spark.sql('SELECT s.symbol, s.close \
-                     FROM stocks s \
-                     JOIN lastDay2010Symbol l \
-                     ON s.symbol = l.symbol \
-                     JOIN (\
-                           SELECT p.* \
-                           FROM portfolio_lateral p')
+    stmt = spark.sql('SELECT p.pid, SUM(sl.close * p.num) AS portfolio_value \
+                     FROM portfolio_lateral p \
+                     JOIN ( \
+                           SELECT s.symbol, s.close \
+                           FROM stocks s \
+                           JOIN lastDay2010Symbol l\
+                           ON s.symbol = l.symbol\
+                     ) AS sl \
+                     ON sl.symbol = p.symbol \
+                     WHERE sl.close IS NOT NULL \
+                     \
+                     GROUP BY p.pid \
+                     ORDER BY p.pid')
     stmt.show()
 
-
-
-
-
-
+portfolio_value_2010(spark)
