@@ -92,8 +92,9 @@ def portfolio_value_2010(spark):
                      JOIN ( \
                            SELECT s.symbol, s.close \
                            FROM stocks s \
-                           JOIN lastDay2010Symbol l\
-                           ON s.symbol = l.symbol\
+                           JOIN lastDay2010Symbol l \
+                           ON s.symbol = l.symbol \
+                           AND s.dt = l.last_day \
                      ) AS sl \
                      ON sl.symbol = p.symbol \
                      WHERE sl.close IS NOT NULL \
