@@ -111,7 +111,7 @@ def import_all_products_from_filesystem(spark):
     for file in product_files:
         import_product_data(spark, file)
 
-#call("cd; cd hadoop-2.7.3; ./bin/hadoop fs -rm -R \
-#         cdcstations_lw.parquet", shell=True)
+call("cd; cd hadoop-2.7.3; ./bin/hadoop fs -rm -R \
+         cdcstations_lw.parquet", shell=True)
 #call("cd; cd hadoop-2.7.3; ./bin/hadoop fs -rm -R \
 #         cdcproducts_lw.parquet", shell=True)

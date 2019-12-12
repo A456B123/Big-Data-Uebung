@@ -63,5 +63,30 @@ def symbols_no_portfolio(spark):
     symbols_no_portfolio = spark.sql('SELECT s.symbol FROM stocks s \
                                      LEFT ANTI JOIN portfolio_lateral p \
                                      ON s.symbol = p.symbol')
-    symbols.show()
+    symbols_no_portfolio.show()
+
+
+# e)
+print('\n######## e) ########')
+def portfolio_value_2010(spark):
+    last_day_2010 = spark.sql('SELECT symbol, MAX(dt) as last_day \
+                              FROM stocks \
+                              WHERE YEAR(dt) = 2010 \
+                              GROUP BY symbol')
+    last_day_2010.createOrReplaceTempView('lastDay2010Symbol')
+    last_day_2010.cache()
+
+    stmt = spark.sql('SELECT s.symbol, s.close \
+                     FROM stocks s \
+                     JOIN lastDay2010Symbol l \
+                     ON s.symbol = l.symbol \
+                     JOIN (\
+                           SELECT p.* \
+                           FROM portfolio_lateral p')
+    stmt.show()
+
+
+
+
+
 
