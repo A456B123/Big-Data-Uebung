@@ -1,0 +1,33 @@
+<component name="libraryTable">
+  <library name="flink-dist_2.12-1.8.1">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/flink_jars/lib/flink-dist_2.12-1.8.1.jar!/" />
+      <root url="jar://$USER_HOME$/flink_jars/lib/log4j-1.2.17.jar!/" />
+      <root url="jar://$USER_HOME$/flink_jars/lib/slf4j-log4j12-1.7.15.jar!/" />
+      <root url="jar://$USER_HOME$/flink_jars/opt/flink-cep-scala_2.12-1.8.1.jar!/" />
+      <root url="jar://$USER_HOME$/flink_jars/opt/flink-cep_2.12-1.8.1.jar!/" />
+      <root url="jar://$USER_HOME$/flink_jars/opt/flink-gelly-scala_2.12-1.8.1.jar!/" />
+      <root url="jar://$USER_HOME$/flink_jars/opt/flink-gelly_2.12-1.8.1.jar!/" />
+      <root url="jar://$USER_HOME$/flink_jars/opt/flink-metrics-datadog-1.8.1.jar!/" />
+      <root url="jar://$USER_HOME$/flink_jars/opt/flink-metrics-graphite-1.8.1.jar!/" />
+      <root url="jar://$USER_HOME$/flink_jars/opt/flink-metrics-prometheus-1.8.1.jar!/" />
+      <root url="jar://$USER_HOME$/flink_jars/opt/flink-metrics-influxdb-1.8.1.jar!/" />
+      <root url="jar://$USER_HOME$/flink_jars/opt/flink-metrics-slf4j-1.8.1.jar!/" />
+      <root url="jar://$USER_HOME$/flink_jars/opt/flink-metrics-statsd-1.8.1.jar!/" />
+      <root url="jar://$USER_HOME$/flink_jars/opt/flink-ml_2.12-1.8.1.jar!/" />
+      <root url="jar://$USER_HOME$/flink_jars/opt/flink-oss-fs-hadoop-1.8.1.jar!/" />
+      <root url="jar://$USER_HOME$/flink_jars/opt/flink-python_2.12-1.8.1.jar!/" />
+      <root url="jar://$USER_HOME$/flink_jars/opt/flink-queryable-state-runtime_2.12-1.8.1.jar!/" />
+      <root url="jar://$USER_HOME$/flink_jars/opt/flink-s3-fs-hadoop-1.8.1.jar!/" />
+      <root url="jar://$USER_HOME$/flink_jars/opt/flink-s3-fs-presto-1.8.1.jar!/" />
+      <root url="jar://$USER_HOME$/flink_jars/opt/flink-sql-client_2.12-1.8.1.jar!/" />
+      <root url="jar://$USER_HOME$/flink_jars/opt/flink-streaming-python_2.12-1.8.1.jar!/" />
+      <root url="jar://$USER_HOME$/flink_jars/opt/flink-swift-fs-hadoop-1.8.1.jar!/" />
+      <root url="jar://$USER_HOME$/flink_jars/opt/flink-table_2.12-1.8.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/flink_jars/lib/flink-dist_2.12-1.8.1.jar!/" />
+    </SOURCES>
+  </library>
+</component>
