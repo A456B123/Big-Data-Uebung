@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="/home/ubuntubig/flink-1.8.1/opt/flink-cep_2.12-1.8.1.jar"/>
+	<classpathentry kind="lib" path="/home/ubuntubig/flink-1.8.1/opt/flink-cep-scala_2.12-1.8.1.jar"/>
+	<classpathentry kind="lib" path="/home/ubuntubig/flink-1.8.1/opt/flink-gelly_2.12-1.8.1.jar"/>
+	<classpathentry kind="lib" path="/home/ubuntubig/flink-1.8.1/opt/flink-gelly-scala_2.12-1.8.1.jar"/>
+	<classpathentry kind="lib" path="/home/ubuntubig/flink-1.8.1/opt/flink-metrics-datadog-1.8.1.jar"/>
+	<classpathentry kind="lib" path="/home/ubuntubig/flink-1.8.1/opt/flink-metrics-graphite-1.8.1.jar"/>
+	<classpathentry kind="lib" path="/home/ubuntubig/flink-1.8.1/opt/flink-metrics-influxdb-1.8.1.jar"/>
+	<classpathentry kind="lib" path="/home/ubuntubig/flink-1.8.1/opt/flink-metrics-prometheus-1.8.1.jar"/>
+	<classpathentry kind="lib" path="/home/ubuntubig/flink-1.8.1/opt/flink-metrics-slf4j-1.8.1.jar"/>
+	<classpathentry kind="lib" path="/home/ubuntubig/flink-1.8.1/opt/flink-metrics-statsd-1.8.1.jar"/>
+	<classpathentry kind="lib" path="/home/ubuntubig/flink-1.8.1/opt/flink-ml_2.12-1.8.1.jar"/>
+	<classpathentry kind="lib" path="/home/ubuntubig/flink-1.8.1/opt/flink-oss-fs-hadoop-1.8.1.jar"/>
+	<classpathentry kind="lib" path="/home/ubuntubig/flink-1.8.1/opt/flink-python_2.12-1.8.1.jar"/>
+	<classpathentry kind="lib" path="/home/ubuntubig/flink-1.8.1/opt/flink-queryable-state-runtime_2.12-1.8.1.jar"/>
+	<classpathentry kind="lib" path="/home/ubuntubig/flink-1.8.1/opt/flink-s3-fs-hadoop-1.8.1.jar"/>
+	<classpathentry kind="lib" path="/home/ubuntubig/flink-1.8.1/opt/flink-s3-fs-presto-1.8.1.jar"/>
+	<classpathentry kind="lib" path="/home/ubuntubig/flink-1.8.1/opt/flink-sql-client_2.12-1.8.1.jar"/>
+	<classpathentry kind="lib" path="/home/ubuntubig/flink-1.8.1/opt/flink-streaming-python_2.12-1.8.1.jar"/>
+	<classpathentry kind="lib" path="/home/ubuntubig/flink-1.8.1/opt/flink-swift-fs-hadoop-1.8.1.jar"/>
+	<classpathentry kind="lib" path="/home/ubuntubig/flink-1.8.1/opt/flink-table_2.12-1.8.1.jar"/>
+	<classpathentry kind="lib" path="/home/ubuntubig/flink-1.8.1/lib/flink-dist_2.12-1.8.1.jar"/>
+	<classpathentry kind="lib" path="/home/ubuntubig/flink-1.8.1/lib/log4j-1.2.17.jar"/>
+	<classpathentry kind="lib" path="/home/ubuntubig/flink-1.8.1/lib/slf4j-log4j12-1.7.15.jar"/>
+	<classpathentry kind="lib" path="/usr/share/java/openjfx/lib/ant-javafx.jar"/>
+	<classpathentry kind="lib" path="/usr/share/java/openjfx/lib/javafx-mx.jar"/>
+	<classpathentry kind="lib" path="/usr/share/java/openjfx/lib/packager.jar"/>
+	<classpathentry kind="lib" path="/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/jfxrt.jar"/>
+	<classpathentry kind="lib" path="/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jfxswt.jar"/>
+	<classpathentry kind="lib" path="/usr/lib/jvm/java-8-openjdk-amd64/lib/ant-javafx.jar"/>
+	<classpathentry kind="lib" path="/usr/lib/jvm/java-8-openjdk-amd64/lib/javafx-mx.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
